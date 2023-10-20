@@ -1,4 +1,4 @@
-import { ToLessParamsException } from "./exceptions";
+import { MatchException, ToLessParamsException } from "./exceptions";
 import { PathMapperElementPart, convertPathMapper } from "./helper";
 
 export class PathMapper {
@@ -15,14 +15,14 @@ export class PathMapper {
         this.pathExpression = pathExpression;
     }
 
-    match(path: string): Record<string, string> | undefined {
+    match(path: string): Record<string, string> {
         
         const matches = new RegExp(this.regex).exec(path);
 
         if(matches == null) {
-            return undefined;
+            throw new MatchException(path, this.regex.toString());
         }
-
+        matches.shift();
         const matchedValues = this.parts.reduce((acc, part) => {
     
             acc[part.id] = matches.shift()!;
