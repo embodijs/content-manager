@@ -3,8 +3,10 @@
   "module": "index.ts",
   "type": "module",
   "devDependencies": {
+    "@faker-js/faker": "^8.2.0",
     "bun-types": "latest"
   },
+  "license": "Apache-2.0",
   "peerDependencies": {
     "typescript": "^5.0.0"
   }
