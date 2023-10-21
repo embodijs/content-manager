@@ -45,6 +45,20 @@ export function convertToRegex (str: string): PathMapperPart {
     }
 }
 
+export function getBasePath (parts: PathMapperPart[]): string  {
+    let base = '';
+    for(let x of parts) {
+        if(x.type === 'static') {
+            base += x.regex;
+        } else {
+            break;
+        }
+    }
+    return base;
+}
+
+
+
 export function convertPathMapper (pathExpresssion: string): {
     regex: RegExp;
     parts: PathMapperPart[];
@@ -59,9 +73,10 @@ export function convertPathMapper (pathExpresssion: string): {
 
     const regStr = pathMapperParts.map((part) => part.regex).join('\\/');
     
+
     
     return {
-        regex: new RegExp(`^\\/?${regStr}\\/?$`),
-        parts: pathMapperParts
+        regex: new RegExp(`\\/?${regStr}\\/?$`),
+        parts: pathMapperParts,
     }
 }

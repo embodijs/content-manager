@@ -1,18 +1,33 @@
 import { MatchException, ToLessParamsException } from "./exceptions";
-import { PathMapperElementPart, convertPathMapper } from "./helper";
+import { PathMapperElementPart, convertPathMapper, getBasePath } from "./helper";
 
 export class PathMapper {
 
     private pathExpression: string;
     private parts: PathMapperElementPart[];
     private regex: RegExp;
+    private base: string;
 
     constructor(pathExpression: string) {
 
         const { parts, regex } = convertPathMapper(pathExpression);
+        this.base = getBasePath(parts);
         this.parts = parts.filter<PathMapperElementPart>((part): part is PathMapperElementPart => ['element', 'path'].includes(part.type));
         this.regex = regex;
         this.pathExpression = pathExpression;
+    }
+
+    getBasePath(): string {
+        return this.base;
+    }
+
+    getParams(): string[] {
+        return this.parts.reduce((acc, cur) => {
+            if(cur.id == null) {
+                return acc;
+            }
+            return [...acc, cur.id];
+        }, [] as string[]);
     }
 
     match(path: string): Record<string, string> {
